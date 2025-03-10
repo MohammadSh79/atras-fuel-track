@@ -11,5 +11,5 @@ class Union(models.Model):
     )
 
     organization = models.TextField(choices=organization_choices)
-    coowner = models.ForeignKey(CoownerUser, on_delete=models.CASCADE)
+    # coowner = models.OneToOneField(CoownerUser, on_delete=models.CASCADE)
     machines = models.ForeignKey(Machine, on_delete=models.CASCADE)
