@@ -1,17 +1,20 @@
 from django.db import models
 from DigitalSign.models import DigitalSign
-from django.contrib.auth.models import AbstractBaseUser
-from django.contrib import admin
+from django.contrib.auth.models import AbstractBaseUser, UserManager
 
 class User(AbstractBaseUser):
-    class Meta:
-        abstract = True
+    username = models.TextField(unique=True, blank=True, null=True)
+    union_name = models.ForeignKey('Union.Union', on_delete=models.CASCADE, related_name='members', null=True, blank=True)
+
+    objects = UserManager()
+
+    USERNAME_FIELD =  'username'
 
 class RealUser(User):
     first_name = models.TextField()
     last_name = models.TextField()
     certificate_id = models.TextField()
-    national_code = models.TextField()
+    national_code = models.TextField(unique=True)
     father_name = models.TextField()
     birth_date = models.DateField()
     phone_number = models.TextField()
@@ -21,7 +24,7 @@ class RealUser(User):
 class LegalUser(User):
     company_name = models.TextField()
     representative_name = models.TextField()
-    national_id = models.TextField()
+    national_id = models.TextField(unique=True)
     economy_number = models.TextField()
     registered_number = models.TextField()
 
@@ -32,8 +35,3 @@ class CoownerUser(RealUser):
 
 class MachineOwner(RealUser):
     pass
-
-admin.site.register(RealUser)
-admin.site.register(LegalUser)
-admin.site.register(CoownerUser)
-admin.site.register(MachineOwner)

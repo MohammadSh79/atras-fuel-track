@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'Union.apps.UnionConfig',
     'BusinessLicense.apps.BusinesslicenseConfig',
     "rest_framework",
+
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+AUTH_USER_MODEL = 'User.User'
+
+AUTHENTICATION_BACKENDS = ["User.backends.MyBackend"]
