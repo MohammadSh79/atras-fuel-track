@@ -1,14 +1,19 @@
 from django.db import models
 from DigitalSign.models import DigitalSign
-from django.contrib.auth.models import AbstractBaseUser, UserManager
+from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
 
-class User(AbstractBaseUser):
+class User(PermissionsMixin, AbstractBaseUser):
     username = models.TextField(unique=True, blank=True, null=True)
     union_name = models.ForeignKey('Union.Union', on_delete=models.CASCADE, related_name='members', null=True, blank=True)
 
     objects = UserManager()
 
     USERNAME_FIELD =  'username'
+    
+    class Meta:
+        permissions = [
+            ("is_union", "Whether this account is for a union or not"),
+        ]
 
 class RealUser(User):
     first_name = models.TextField()
@@ -31,7 +36,7 @@ class LegalUser(User):
     USERNAME_FIELD = 'national_id'
 
 class CoownerUser(RealUser):
-    digital_sign = models.OneToOneField(DigitalSign, on_delete=models.CASCADE, related_name="owner")
+    digital_sign = models.OneToOneField(DigitalSign, on_delete=models.CASCADE, related_name="owner", null=True)
 
 class MachineOwner(RealUser):
     pass

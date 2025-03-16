@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.db.models import Exists, OuterRef, Q
 from User.models import RealUser, LegalUser
+from Union.models import Union
 
 UserModel = get_user_model()
 
@@ -19,7 +20,7 @@ class MyBackend(BaseBackend):
             elif user_type == "legal_user":
                 user = LegalUser.objects.get(national_id=username)
             elif user_type == "union":
-                user = LegalUser.objects.get(username=username)
+                user = Union.objects.get(username=username)
             else:
                 return None
 
