@@ -3,13 +3,13 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
-class CustomTokenObtainView(APIView):
+class UserTokenObtainView(APIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
-        user_type = request.data.get('user_type')  # Specify subclass type
+        # user_type = request.data.get('user_type')  # Specify subclass type
 
-        user = authenticate(request, username=username, password=password, user_type=user_type)
+        user = authenticate(request, username=username, password=password)
 
         if user:
             refresh = RefreshToken.for_user(user)

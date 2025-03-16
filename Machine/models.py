@@ -1,5 +1,5 @@
 from django.db import models
-from User.models import MachineOwner
+from User.models import User
 
 class Machine(models.Model):
     registered_number = models.IntegerField()
@@ -31,4 +31,4 @@ class Machine(models.Model):
     )
 
     model = models.TextField(choices=model_choices)
-    owner = models.ForeignKey(MachineOwner, on_delete=models.CASCADE, related_name="machines")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="machines")

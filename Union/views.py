@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from User.models import LegalUser, RealUser
 from User.permissions import IsUnion
 from .serializers import MembersViewSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from .utils import authenticate
 
 class DashboardView(APIView):
     permission_classes = [IsAuthenticated, IsUnion]
@@ -27,3 +29,18 @@ class MembersView(APIView):
         }
         serializer = MembersViewSerializer(data)
         return Response(serializer.data)
+    
+class UnionTokenObtainView(APIView):
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        return Response({'error': 'Invalid credentials'}, status=401)

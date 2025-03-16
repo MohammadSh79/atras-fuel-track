@@ -12,23 +12,14 @@ class MyBackend(BaseBackend):
     Authenticates against settings.AUTH_USER_MODEL.
     """
 
-    def authenticate(self, request, username=None, password=None, user_type=None):
-        try:
-            if user_type == "real_user":
-                user = RealUser.objects.get(national_code=username)
-                print("real user: " + username)
-            elif user_type == "legal_user":
-                user = LegalUser.objects.get(national_id=username)
-            elif user_type == "union":
-                user = Union.objects.get(username=username)
-            else:
-                return None
+    def authenticate(self, request, username=None, password=None):
+        user = RealUser.objects.get_or_none(national_code=username)
+        if user is None:
+            user = LegalUser.objects.get_or_none(national_id=username)
 
-            if user.check_password(password):
-                return user
-        except RealUser.DoesNotExist:
-            return None
-        except LegalUser.DoesNotExist:
+        if user is not None and user.check_password(password):
+            return user
+        else:
             return None
 
     def user_can_authenticate(self, user):

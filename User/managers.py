@@ -1,7 +1,7 @@
 from django.apps import apps
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import UserManager
-
+from django.core.exceptions import ObjectDoesNotExist
 class CustomUserManager(UserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
@@ -25,3 +25,9 @@ class CustomUserManager(UserManager):
 
     def get_by_natural_key(self, username):
         return self.get(username__iexact=username)
+    
+    def get_or_none(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except ObjectDoesNotExist:
+            return None

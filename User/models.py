@@ -1,12 +1,13 @@
 from django.db import models
 from DigitalSign.models import DigitalSign
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
+from .managers import CustomUserManager
 
 class User(PermissionsMixin, AbstractBaseUser):
     username = models.TextField(unique=True, blank=True, null=True)
     union_name = models.ForeignKey('Union.Union', on_delete=models.CASCADE, related_name='members', null=True, blank=True)
 
-    objects = UserManager()
+    objects = CustomUserManager()
 
     USERNAME_FIELD =  'username'
     
@@ -38,5 +39,5 @@ class LegalUser(User):
 class CoownerUser(RealUser):
     digital_sign = models.OneToOneField(DigitalSign, on_delete=models.CASCADE, related_name="owner", null=True)
 
-class MachineOwner(RealUser):
-    pass
+# class MachineOwner(RealUser):
+#     pass
